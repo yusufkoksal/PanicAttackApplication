@@ -12,7 +12,7 @@ public interface OpenAIApi {
 
     @Headers({
             "Content-Type: application/json",
-            "Authorization: Bearer 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"
+            "Authorization: Bearer {apiKey}"
     })
     @POST("v1/chat/completions")
     Call<ChatResponse> sendMessage(@Body ChatRequest request);
