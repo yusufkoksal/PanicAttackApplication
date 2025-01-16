@@ -5,14 +5,18 @@ import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 
-public class BreathingTechnique extends AppCompatActivity {
+public class TechniqueFragment extends Fragment {
 
     private TextView timerText;
     private Button startButton;
@@ -23,25 +27,25 @@ public class BreathingTechnique extends AppCompatActivity {
     private int step = 0;
     private ObjectAnimator animator;
 
+    @Nullable
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_breathing_technique);
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_478_technique, container, false);
 
-        timerText = findViewById(R.id.tv_timer);
-        startButton = findViewById(R.id.btn_start);
-        audioButton = findViewById(R.id.btn_audio);
-        progressBar = findViewById(R.id.progress_circular);
+        timerText = view.findViewById(R.id.tv_timer);
+        startButton = view.findViewById(R.id.btn_start);
+        audioButton = view.findViewById(R.id.btn_audio);
+        progressBar = view.findViewById(R.id.progress_circular);
 
         handler = new Handler();
 
         // ProgressBar animasyonu
         animator = ObjectAnimator.ofInt(progressBar, "progress", 0, 100);
-        animator.setDuration(0); // İlk başta çalışmasın
+        animator.setDuration(0);
         animator.setRepeatCount(0);
 
         // Ses dosyası çalma
-        mediaPlayer = MediaPlayer.create(this, R.raw.breathing_audio);
+        mediaPlayer = MediaPlayer.create(requireContext(), R.raw.breathing_audio);
         audioButton.setOnClickListener(v -> {
             if (mediaPlayer.isPlaying()) {
                 mediaPlayer.pause();
@@ -54,12 +58,14 @@ public class BreathingTechnique extends AppCompatActivity {
 
         // Egzersiz Başlatma
         startButton.setOnClickListener(v -> startBreathingExercise());
+
+        return view;
     }
 
     private void startBreathingExercise() {
         step = 0;
-        progressBar.setProgress(0); // İlerlemeyi sıfırla
-        animator.setDuration(0); // Animasyonu baştan sıfırla
+        progressBar.setProgress(0);
+        animator.setDuration(0);
         handler.post(breathingRunnable);
     }
 
@@ -69,27 +75,27 @@ public class BreathingTechnique extends AppCompatActivity {
             switch (step) {
                 case 0:
                     timerText.setText("Breathe In");
-                    startCountdown(4); // 4 saniye geri sayım
+                    startCountdown(4);
                     animateProgressBar(0, 40, 4000);
                     handler.postDelayed(() -> timerText.setText("Breathe In - Complete!"), 4000);
                     step++;
-                    handler.postDelayed(this, 6000); // Ekstra 2 saniye okuma süresi
+                    handler.postDelayed(this, 6000);
                     break;
                 case 1:
                     timerText.setText("Hold Breath");
-                    startCountdown(7); // 7 saniye geri sayım
+                    startCountdown(7);
                     animateProgressBar(40, 70, 7000);
                     handler.postDelayed(() -> timerText.setText("Hold Breath - Complete!"), 7000);
                     step++;
-                    handler.postDelayed(this, 9000); // Ekstra 2 saniye okuma süresi
+                    handler.postDelayed(this, 9000);
                     break;
                 case 2:
                     timerText.setText("Exhale");
-                    startCountdown(8); // 8 saniye geri sayım
+                    startCountdown(8);
                     animateProgressBar(70, 100, 8000);
                     handler.postDelayed(() -> timerText.setText("Exhale - Complete!"), 8000);
                     step++;
-                    handler.postDelayed(this, 10000); // Ekstra 2 saniye okuma süresi
+                    handler.postDelayed(this, 10000);
                     break;
                 default:
                     timerText.setText("Exercise Complete!");
@@ -111,19 +117,18 @@ public class BreathingTechnique extends AppCompatActivity {
 
             @Override
             public void onTick(long millisUntilFinished) {
-                timerText.setText(String.valueOf(--remainingTime)); // Geri sayımı göster
+                timerText.setText(String.valueOf(--remainingTime));
             }
 
             @Override
             public void onFinish() {
-                // Bir sonraki adıma geçerken geri sayım duracak
             }
         }.start();
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
+    public void onDestroyView() {
+        super.onDestroyView();
         if (mediaPlayer != null) {
             mediaPlayer.release();
             mediaPlayer = null;
@@ -131,6 +136,3 @@ public class BreathingTechnique extends AppCompatActivity {
         handler.removeCallbacks(breathingRunnable);
     }
 }
-
-
-//deneme yorum satırı

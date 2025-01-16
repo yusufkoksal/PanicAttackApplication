@@ -1,11 +1,10 @@
 package gui.ceng.mu.edu.panic_atack_app;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 public class EmergencySupport extends AppCompatActivity {
 
@@ -14,24 +13,16 @@ public class EmergencySupport extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_emergency_support);
 
-        // 4-7-8 Technique Butonu
-        Button btn478Technique = findViewById(R.id.btn_478_technique);
-        btn478Technique.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(EmergencySupport.this, BreathingTechnique.class);
-                startActivity(intent);
-            }
-        });
+        // Varsayılan olarak 4-7-8 Fragmentini yükle
+        loadFragment(new TechniqueFragment());
 
-        // Visual/Audio Guide Screen Butonu
-        Button btnVisualAudio = findViewById(R.id.btn_visual_audio_guide);
-        btnVisualAudio.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(EmergencySupport.this, VisualGuide.class);
-                startActivity(intent);
-            }
-        });
+        findViewById(R.id.btn_478_technique).setOnClickListener(v -> loadFragment(new TechniqueFragment()));
+        findViewById(R.id.btn_visual_guide).setOnClickListener(v -> loadFragment(new VisualGuideFragment()));
+    }
+
+    private void loadFragment(Fragment fragment) {
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.fragment_container, fragment);
+        transaction.commit();
     }
 }
