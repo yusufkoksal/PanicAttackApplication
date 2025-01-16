@@ -29,7 +29,7 @@ public class EmergencySupport extends AppCompatActivity {
         btnVisualAudio.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(EmergencySupport.this, GuideScreen.class);
+                Intent intent = new Intent(EmergencySupport.this, VisualGuide.class);
                 startActivity(intent);
             }
         });
